@@ -5,12 +5,13 @@ import 'package:flame/game.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class BoxGame extends Game {
+class BoxGame extends BaseGame {
   Size screenSize;
   double dx = 0.0;
   Rect boxRect;
   FlareAnimation flareAnimation;
   bool loaded = false;
+  Sprite spriteImage;
 
   BoxGame() {
     _start();
@@ -34,6 +35,9 @@ class BoxGame extends Game {
     Paint bgPaint = Paint();
     bgPaint.color = Color(0xffffffff);
     canvas.drawRect(bgRect, bgPaint);
+
+    spriteImage = Sprite("assets/background/citybackground.png");
+    spriteImage.render(canvas);
 
     if (loaded) {
       flareAnimation.render(canvas);
