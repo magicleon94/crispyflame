@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:flame/animation.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/flare_animation.dart';
 import 'package:flame/game.dart';
+import 'package:flame/position.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/time.dart';
 import 'package:flutter/gestures.dart';
@@ -16,6 +18,7 @@ class BoxGame extends BaseGame {
   Sprite spriteImage;
   Image image;
   Timer timer = Timer(2);
+  Animation backgroundAnimation;
 
   BoxGame() {
     _start();
@@ -33,6 +36,14 @@ class BoxGame extends BaseGame {
 
     flareAnimation.width = 306;
     flareAnimation.height = 228;
+
+    const int frames = 10;
+    backgroundAnimation = Animation.sequenced(
+      "citybackground.png",
+      frames,
+      textureWidth: 100,
+      textureHeight: 500,
+    );
     loaded = true;
   }
 
@@ -42,11 +53,13 @@ class BoxGame extends BaseGame {
     bgPaint.color = Color(0xffffffff);
     canvas.drawRect(bgRect, bgPaint);
 
-    canvas.drawImage(image, Offset.zero, bgPaint);
+    //canvas.drawImage(image, Offset.zero, bgPaint);
+
 //    spriteImage = Sprite("citybackground.png", width: 400, height: 500);
 //    spriteImage.render(canvas);
 
     if (loaded) {
+      backgroundAnimation.getSprite().renderPosition(canvas, Position(0, 0));
       flareAnimation.render(canvas);
     }
   }
