@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:flame/animation.dart';
+import 'package:flame/components/parallax_component.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/flare_animation.dart';
 import 'package:flame/game.dart';
-import 'package:flame/position.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/time.dart';
 import 'package:flutter/gestures.dart';
@@ -19,13 +19,14 @@ class BoxGame extends BaseGame {
   Image image;
   Timer timer = Timer(2);
   Animation backgroundAnimation;
+  ParallaxComponent parallaxComponent;
 
   BoxGame() {
     _start();
   }
 
   void _start() async {
-    image = await Flame.images.load('citybackground.png');
+    image = await Flame.images.load('background.jpg');
 
     flareAnimation =
         await FlareAnimation.load("assets/animations/Maialino.flr");
@@ -37,13 +38,16 @@ class BoxGame extends BaseGame {
     flareAnimation.width = 306;
     flareAnimation.height = 228;
 
-    const int frames = 10;
-    backgroundAnimation = Animation.sequenced(
-      "citybackground.png",
-      frames,
-      textureWidth: 100,
-      textureHeight: 500,
-    );
+//    int frames = 1521 ~/ screenSize.width;
+//    backgroundAnimation = Animation.sequenced(
+//      "background.jpg",
+//      frames,
+//      textureWidth: screenSize.width,
+//      textureHeight: screenSize.height,
+//      stepTime: 0.5,
+//    );
+
+    parallaxComponent = ParallaxComponent()..load(["background.jpg"]);
     loaded = true;
   }
 
@@ -53,13 +57,14 @@ class BoxGame extends BaseGame {
     bgPaint.color = Color(0xffffffff);
     canvas.drawRect(bgRect, bgPaint);
 
-    //canvas.drawImage(image, Offset.zero, bgPaint);
-
-//    spriteImage = Sprite("citybackground.png", width: 400, height: 500);
-//    spriteImage.render(canvas);
+//    var paint = Paint()..color = Color(0xffffffff);
+//    var rect = Rect.fromLTWH(0.0, 0.0, double.infinity, screenSize.height);
+//    canvas.drawImageRect(image, rect, rect, paint);
 
     if (loaded) {
-      backgroundAnimation.getSprite().renderPosition(canvas, Position(0, 0));
+//      parallaxComponent.render(canvas);
+//      backgroundAnimation.getSprite().render(canvas);
+//      backgroundAnimation.getSprite().renderPosition(canvas, Position(0, 0));
       flareAnimation.render(canvas);
     }
   }
@@ -67,6 +72,8 @@ class BoxGame extends BaseGame {
   void update(double t) {
     if (loaded) {
       flareAnimation.update(t);
+//      backgroundAnimation.update(t);
+//      parallaxComponent.update(t);
     }
     if (timer.isFinished()) {
       flareAnimation.updateAnimation("Corsa");
@@ -75,6 +82,8 @@ class BoxGame extends BaseGame {
 
   void resize(Size size) {
     screenSize = size;
+//    parallaxComponent?.width = screenSize.width;
+//    parallaxComponent?.height = screenSize.height;
     super.resize(size);
   }
 
