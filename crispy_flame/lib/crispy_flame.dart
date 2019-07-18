@@ -23,6 +23,12 @@ class BoxGame extends BaseGame {
 
   BoxGame() {
     _start();
+    _background();
+  }
+
+  void _background() {
+    parallaxComponent = ParallaxComponent();
+    parallaxComponent.load(["background.jpg"]);
   }
 
   void _start() async {
@@ -38,18 +44,11 @@ class BoxGame extends BaseGame {
     flareAnimation.width = 306;
     flareAnimation.height = 228;
 
-//    int frames = 1521 ~/ screenSize.width;
-//    backgroundAnimation = Animation.sequenced(
-//      "background.jpg",
-//      frames,
-//      textureWidth: screenSize.width,
-//      textureHeight: screenSize.height,
-//      stepTime: 0.5,
-//    );
-
-    parallaxComponent = ParallaxComponent()..load(["background.jpg"]);
     loaded = true;
   }
+
+  @override
+  bool debugMode() => true;
 
   void render(Canvas canvas) {
     Rect bgRect = Rect.fromLTWH(0, 0, screenSize.width, screenSize.height);
@@ -57,23 +56,25 @@ class BoxGame extends BaseGame {
     bgPaint.color = Color(0xffffffff);
     canvas.drawRect(bgRect, bgPaint);
 
+    add(parallaxComponent);
 //    var paint = Paint()..color = Color(0xffffffff);
 //    var rect = Rect.fromLTWH(0.0, 0.0, double.infinity, screenSize.height);
 //    canvas.drawImageRect(image, rect, rect, paint);
 
+    if (parallaxComponent.loaded()) {
+      parallaxComponent.render(canvas);
+    }
     if (loaded) {
-//      parallaxComponent.render(canvas);
-//      backgroundAnimation.getSprite().render(canvas);
-//      backgroundAnimation.getSprite().renderPosition(canvas, Position(0, 0));
       flareAnimation.render(canvas);
     }
   }
 
   void update(double t) {
+    if (parallaxComponent.loaded()) {
+      parallaxComponent.update(t);
+    }
     if (loaded) {
       flareAnimation.update(t);
-//      backgroundAnimation.update(t);
-//      parallaxComponent.update(t);
     }
     if (timer.isFinished()) {
       flareAnimation.updateAnimation("Corsa");
@@ -82,8 +83,9 @@ class BoxGame extends BaseGame {
 
   void resize(Size size) {
     screenSize = size;
-//    parallaxComponent?.width = screenSize.width;
-//    parallaxComponent?.height = screenSize.height;
+//    if (parallaxComponent.loaded()) {
+//      parallaxComponent.resize(size);
+//    }
     super.resize(size);
   }
 
