@@ -36,9 +36,8 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - assets/animations/Maialino.flr
-    - assets/images/citybackground.png
-    - assets/images/background.jpg
+    - assets/animations/
+    - assets/images/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
