@@ -1,8 +1,7 @@
 import 'dart:ui';
 
+import 'package:crispy_flame/components/background.dart';
 import 'package:flame/animation.dart';
-import 'package:flame/components/parallax_component.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/flare_animation.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
@@ -19,20 +18,14 @@ class BoxGame extends BaseGame {
   Image image;
   Timer timer = Timer(2);
   Animation backgroundAnimation;
-  ParallaxComponent parallaxComponent;
+  Background background;
 
   BoxGame() {
     _start();
-    _background();
-  }
-
-  void _background() {
-    parallaxComponent = ParallaxComponent();
-    parallaxComponent.load(["background.jpg"]);
   }
 
   void _start() async {
-    image = await Flame.images.load('background.jpg');
+    background = Background(this);
 
     flareAnimation =
         await FlareAnimation.load("assets/animations/Maialino.flr");
@@ -40,7 +33,6 @@ class BoxGame extends BaseGame {
 
     flareAnimation.x = 0;
     flareAnimation.y = 145;
-
     flareAnimation.width = 306;
     flareAnimation.height = 228;
 
@@ -51,38 +43,29 @@ class BoxGame extends BaseGame {
   bool debugMode() => true;
 
   void render(Canvas canvas) {
-    Rect bgRect = Rect.fromLTWH(0, 0, screenSize.width, screenSize.height);
-    Paint bgPaint = Paint();
-    bgPaint.color = Color(0xffffffff);
-    canvas.drawRect(bgRect, bgPaint);
-
-    add(parallaxComponent);
-//    var paint = Paint()..color = Color(0xffffffff);
-//    var rect = Rect.fromLTWH(0.0, 0.0, double.infinity, screenSize.height);
-//    canvas.drawImageRect(image, rect, rect, paint);
-
-    if (parallaxComponent.loaded()) {
-      parallaxComponent.render(canvas);
-    }
     if (loaded) {
+      background.render(canvas);
       flareAnimation.render(canvas);
     }
   }
 
   void update(double t) {
-    if (parallaxComponent.loaded()) {
-      parallaxComponent.update(t);
-    }
     if (loaded) {
+      background.update(t);
       flareAnimation.update(t);
-    }
-    if (timer.isFinished()) {
-      flareAnimation.updateAnimation("Corsa");
+      if (timer.isRunning()) {
+        timer.update(t);
+      }
+      if (timer.isFinished()) {
+        timer.stop();
+        flareAnimation.updateAnimation("Corsa");
+      }
     }
   }
 
   void resize(Size size) {
     screenSize = size;
+    background?.resize();
 //    if (parallaxComponent.loaded()) {
 //      parallaxComponent.resize(size);
 //    }
@@ -90,8 +73,10 @@ class BoxGame extends BaseGame {
   }
 
   void onTapDown(TapDownDetails d) {
-    timer.start();
-    flareAnimation.updateAnimation("Salto");
+    if (!timer.isRunning()) {
+      timer.start();
+      flareAnimation.updateAnimation("Salto");
+    }
 //    if (d.globalPosition.dx > screenSize.width / 2) {
 //      dx = 10.0;
 //    } else {
