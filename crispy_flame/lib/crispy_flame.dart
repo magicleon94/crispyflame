@@ -25,7 +25,8 @@ class BoxGame extends BaseGame {
   }
 
   void _start() async {
-    background = Background(this);
+    background = Background();
+    add(background.parallaxComponent);
 
     flareAnimation =
         await FlareAnimation.load("assets/animations/Maialino.flr");
@@ -65,7 +66,7 @@ class BoxGame extends BaseGame {
 
   void resize(Size size) {
     screenSize = size;
-    background?.resize();
+    background?.resize(screenSize);
 //    if (parallaxComponent.loaded()) {
 //      parallaxComponent.resize(size);
 //    }

@@ -1,31 +1,31 @@
-import 'package:crispy_flame/crispy_flame.dart';
+import 'package:flame/components/component.dart';
 import 'package:flame/components/parallax_component.dart';
 import 'package:flutter/cupertino.dart';
 
-class Background {
-  BoxGame game;
-  Paint bgPaint;
-  ParallaxComponent parallaxComponent;
-  Rect bgRect;
+class Background extends Component {
+  Paint _bgPaint;
+  ParallaxComponent parallaxComponent = ParallaxComponent();
+  Rect _bgRect;
 
-  Background(this.game) {
-    parallaxComponent = ParallaxComponent();
+  Background() {
     parallaxComponent.load(["background.jpg"]);
-    game.add(parallaxComponent);
   }
 
   void render(Canvas canvas) {
-    canvas.drawRect(bgRect, bgPaint);
+    canvas.drawRect(_bgRect, _bgPaint);
     parallaxComponent.render(canvas);
   }
 
   void update(double t) {
-    parallaxComponent.update(t);
+    if (parallaxComponent.loaded()) {
+      parallaxComponent.update(t);
+    }
   }
 
-  void resize() {
-    bgRect = Rect.fromLTWH(0, 0, game.screenSize.width, game.screenSize.height);
-    bgPaint = Paint();
-    bgPaint.color = Color(0xffffffff);
+  void resize(Size gameSize) {
+    _bgRect = Rect.fromLTWH(0, 0, gameSize.width, gameSize.height);
+    _bgPaint = Paint();
+    _bgPaint.color = Color(0xffffffff);
   }
+
 }
